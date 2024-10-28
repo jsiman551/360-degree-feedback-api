@@ -1,6 +1,8 @@
 import express, { Application } from 'express';
 import dotenv from 'dotenv';
 import connectDB from './config/db';
+import errorHandler from './middlewares/errorHandler';
+import userRoutes from './routes/userRoutes';
 
 dotenv.config();
 
@@ -9,9 +11,10 @@ connectDB();
 
 app.use(express.json());
 
-// test route to verify if server works
-app.get('/', (req, res) => {
-    res.send('API is working');
-});
+// routes
+app.use('/api/auth', userRoutes);
+
+// Error Handler Middleware
+app.use(errorHandler);
 
 export default app;
