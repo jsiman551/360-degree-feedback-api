@@ -9,9 +9,17 @@ interface CustomError extends Error {
 
 export const registerUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-        const { username, password, role } = req.body;
+        const { username, email, password, role } = req.body;
 
-        const newUser = new User({ username, password, role });
+        //avoid email duplication
+        const existingUserByEmail = await User.findOne({ email });
+        if (existingUserByEmail) {
+            const customError: CustomError = new Error('Email already in use');
+            customError.statusCode = 409;
+            return next(customError);
+        }
+
+        const newUser = new User({ username, email, password, role });
         await newUser.save();
 
         res.status(201).json({
@@ -20,13 +28,14 @@ export const registerUser = async (req: Request, res: Response, next: NextFuncti
             data: {
                 id: newUser._id,
                 username: newUser.username,
+                email: newUser.email,
                 role: newUser.role,
             },
         });
     } catch (error: any) {
         if (error.code === 11000) {
             // Duplicate User Error
-            const customError: CustomError = new Error('Name was already taken, please write a different name');
+            const customError: CustomError = new Error('Username was already taken, please use a different Username');
             customError.statusCode = 409;
             return next(customError);
         }
