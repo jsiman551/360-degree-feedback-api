@@ -5,16 +5,14 @@ interface CustomError extends Error {
 }
 
 // Middleware to handle errors
-const errorHandler = (err: CustomError, req: Request, res: Response, next: NextFunction) => {
+const errorHandler = (err: CustomError, _req: Request, res: Response, _next: NextFunction) => {
     const status = err.statusCode || 500;
     const message = err.message || 'Server Error';
-    const stack = process.env.NODE_ENV === 'production' ? null : err.stack;
 
     res.status(status).json({
         success: false,
         status,
-        message,
-        stack,
+        message
     });
 };
 
