@@ -205,16 +205,20 @@ export const getEvaluationsByEmployeeId = async (req: CustomRequest, res: Respon
             // managers can only look at managers evaluations
             evaluations = await Evaluation.find({
                 employee: employeeId,
-                evaluator: { $nin: adminIds }, // Excluir evaluaciones hechas por administradores
+                evaluator: { $nin: adminIds },
             }).populate('evaluator employee');
         } else if (req.user?.role === 'Employee') {
-            // Employee can only look at it's own evaluations
+            // Employees can only look at evaluations made to them by Managers
             if (req.user.id !== employeeId) {
                 const error: CustomError = new Error('Access denied');
                 error.statusCode = 403;
                 return next(error);
             }
-            evaluations = await Evaluation.find({ employee: employeeId }).populate('evaluator employee');
+
+            evaluations = await Evaluation.find({
+                employee: employeeId,
+                evaluator: { $nin: await User.find({ role: 'Admin' }, '_id') }
+            }).populate('evaluator employee');
         } else {
             const error: CustomError = new Error('Access denied: invalid role');
             error.statusCode = 403;
