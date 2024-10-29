@@ -57,3 +57,70 @@ export const createEvaluation = async (req: CustomRequest, res: Response, next: 
         next(error);
     }
 };
+
+
+export const getEvaluationById = async (req: CustomRequest, res: Response, next: NextFunction): Promise<void> => {
+    try {
+        if (!req.user) {
+            const error: CustomError = new Error('Unauthorized: user information missing');
+            error.statusCode = 401;
+            return next(error);
+        }
+
+        const { id } = req.params;
+
+        // search evaluation in DB
+        const evaluation = await Evaluation.findById(id).populate('employee evaluator');
+
+        if (!evaluation) {
+            const error: CustomError = new Error('Evaluation not found');
+            error.statusCode = 404;
+            return next(error);
+        }
+
+        // Logic by role
+        if (req.user.role === 'Admin') {
+            // admins can see all evaluations
+            res.status(200).json({
+                success: true,
+                data: evaluation,
+            });
+            return;
+        }
+
+        if (req.user.role === 'Manager') {
+            // Managers can see only their own evaluations
+            if (evaluation.evaluator.toString() !== req.user.id) {
+                const error: CustomError = new Error('Access denied: you cannot view this evaluation');
+                error.statusCode = 403;
+                return next(error);
+            }
+            res.status(200).json({
+                success: true,
+                data: evaluation,
+            });
+            return;
+        }
+
+        if (req.user.role === 'Employee') {
+            // Employees can see the evalution made to them
+            if (evaluation.employee.toString() !== req.user.id) {
+                const error: CustomError = new Error('Access denied: you cannot view this evaluation');
+                error.statusCode = 403;
+                return next(error);
+            }
+            res.status(200).json({
+                success: true,
+                data: evaluation,
+            });
+            return;
+        }
+
+        // role is not known
+        const error: CustomError = new Error('Access denied: invalid role');
+        error.statusCode = 403;
+        return next(error);
+    } catch (error) {
+        next(error);
+    }
+};
