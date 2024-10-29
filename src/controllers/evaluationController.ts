@@ -178,3 +178,54 @@ export const updateEvaluation = async (req: CustomRequest, res: Response, next: 
         next(error);
     }
 };
+
+
+export const getEvaluationsByEmployeeId = async (req: CustomRequest, res: Response, next: NextFunction): Promise<void> => {
+    try {
+        const { id: employeeId } = req.params;
+
+        // Verify if employee exists
+        const employeeExists = await User.findById(employeeId);
+        if (!employeeExists) {
+            const error: CustomError = new Error('Employee not found');
+            error.statusCode = 404;
+            return next(error);
+        }
+
+        let evaluations;
+
+        if (req.user?.role === 'Admin') {
+            // Admins can look at all evaluations by all users
+            evaluations = await Evaluation.find({ employee: employeeId }).populate('evaluator employee');
+        } else if (req.user?.role === 'Manager') {
+            // exclude all admins evaluations
+            const admins = await User.find({ role: 'Admin' }, '_id');
+            const adminIds = admins.map(admin => admin._id);
+
+            // managers can only look at managers evaluations
+            evaluations = await Evaluation.find({
+                employee: employeeId,
+                evaluator: { $nin: adminIds }, // Excluir evaluaciones hechas por administradores
+            }).populate('evaluator employee');
+        } else if (req.user?.role === 'Employee') {
+            // Employee can only look at it's own evaluations
+            if (req.user.id !== employeeId) {
+                const error: CustomError = new Error('Access denied');
+                error.statusCode = 403;
+                return next(error);
+            }
+            evaluations = await Evaluation.find({ employee: employeeId }).populate('evaluator employee');
+        } else {
+            const error: CustomError = new Error('Access denied: invalid role');
+            error.statusCode = 403;
+            return next(error);
+        }
+
+        res.status(200).json({
+            success: true,
+            data: evaluations,
+        });
+    } catch (error) {
+        next(error);
+    }
+};

@@ -1,5 +1,5 @@
 import express from 'express';
-import { createEvaluation, getEvaluationById, updateEvaluation } from '../controllers/evaluationController';
+import { createEvaluation, getEvaluationById, getEvaluationsByEmployeeId, updateEvaluation } from '../controllers/evaluationController';
 import { authorizeRoles } from '../middlewares/authMiddleware';
 import validateResource from '../middlewares/validateResource';
 import { evaluationSchema } from '../schemas/evaluationSchema';
@@ -24,6 +24,12 @@ router.put(
     authorizeRoles(['Manager', 'Admin']),
     validateResource(evaluationSchema),
     updateEvaluation
+);
+
+router.get(
+    '/evaluations/employee/:id',
+    authorizeRoles(['Admin', 'Manager', 'Employee']),
+    getEvaluationsByEmployeeId
 );
 
 export default router;
