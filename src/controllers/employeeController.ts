@@ -1,8 +1,13 @@
 import { Request, Response, NextFunction } from 'express';
 import User from '../models/user';
 
+interface User {
+    id: string;
+    role: 'Admin' | 'Manager' | 'Employee';
+}
+
 interface CustomAuthRequest extends Request {
-    userRole?: string;
+    user?: User;
 }
 
 interface CustomError extends Error {
@@ -11,7 +16,13 @@ interface CustomError extends Error {
 
 export const getEmployees = async (req: CustomAuthRequest, res: Response, next: NextFunction): Promise<void> => {
     try {
-        const userRole = req.userRole;
+        if (!req.user) {
+            const error: CustomError = new Error('User information missing');
+            error.statusCode = 401;
+            return next(error);
+        }
+
+        const userRole = req.user.role;
 
         let employees;
         if (userRole === 'Admin') {

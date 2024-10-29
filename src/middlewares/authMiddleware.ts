@@ -1,8 +1,13 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 
+interface User {
+    id: string;
+    role: 'Admin' | 'Manager' | 'Employee';
+}
+
 interface CustomAuthRequest extends Request {
-    userRole?: string;
+    user?: User;
 }
 
 interface CustomError extends Error {
@@ -22,8 +27,9 @@ export const authorizeRoles = (allowedRoles: string[]) => {
         const token = authHeader.split(' ')[1];
 
         try {
-            const decoded = jwt.verify(token, process.env.JWT_SECRET!);
-            const userRole = (decoded as { role: string }).role;
+            const decoded = jwt.verify(token, process.env.JWT_SECRET!) as { id: string; role: 'Admin' | 'Manager' | 'Employee' };
+            const userId = decoded.id;  // get user id
+            const userRole = decoded.role; // get user role
 
             if (!allowedRoles.includes(userRole)) {
                 const error: CustomError = new Error('Access denied');
@@ -31,7 +37,11 @@ export const authorizeRoles = (allowedRoles: string[]) => {
                 return next(error);
             }
 
-            req.userRole = userRole;
+            // add user data
+            req.user = {
+                id: userId,
+                role: userRole,
+            };
             next();
         } catch (err) {
             const error: CustomError = new Error('Invalid token, authorization denied');

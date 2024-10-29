@@ -4,6 +4,7 @@ import connectDB from './config/db';
 import errorHandler from './middlewares/errorHandler';
 import userRoutes from './routes/userRoutes';
 import employeeRoutes from './routes/employeeRoutes';
+import evaluationRoutes from './routes/evaluationRoutes';
 
 dotenv.config();
 
@@ -15,6 +16,7 @@ app.use(express.json());
 // routes
 app.use('/api/auth', userRoutes);
 app.use('/api', employeeRoutes);
+app.use('/api', evaluationRoutes);
 
 // Error Handler Middleware
 app.use(errorHandler);
