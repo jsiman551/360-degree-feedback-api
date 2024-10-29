@@ -33,7 +33,18 @@ export const createEvaluation = async (req: CustomRequest, res: Response, next: 
         const employeeExists = await User.findById(employeeId);
         if (!employeeExists) {
             const error: CustomError = new Error('Employee not found');
-            error.statusCode = 404; // Usar 404 para recursos no encontrados
+            error.statusCode = 404;
+            return next(error);
+        }
+
+        const existingEvaluation = await Evaluation.findOne({
+            employee: employeeId,
+            evaluator: req.user.id,
+        });
+
+        if (existingEvaluation) {
+            const error: CustomError = new Error('Evaluation already exists for this employee by the current evaluator');
+            error.statusCode = 400;
             return next(error);
         }
 
