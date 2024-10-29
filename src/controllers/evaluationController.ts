@@ -135,3 +135,46 @@ export const getEvaluationById = async (req: CustomRequest, res: Response, next:
         next(error);
     }
 };
+
+export const updateEvaluation = async (req: CustomRequest, res: Response, next: NextFunction): Promise<void> => {
+    try {
+        if (!req.user) {
+            const error: CustomError = new Error('Unauthorized: user information missing');
+            error.statusCode = 401;
+            return next(error);
+        }
+
+        const { id } = req.params;
+        const { score, comments } = req.body;
+
+        // find evaluation in DB
+        const evaluation = await Evaluation.findById(id);
+
+        if (!evaluation) {
+            const error: CustomError = new Error('Evaluation not found');
+            error.statusCode = 404;
+            return next(error);
+        }
+
+        // Verify if user owns evaluation
+        if (evaluation.evaluator.toString() !== req.user.id) {
+            const error: CustomError = new Error('Access denied: you can only update your own evaluations');
+            error.statusCode = 403;
+            return next(error);
+        }
+
+        // update evaluation
+        if (score !== undefined) evaluation.score = score;
+        if (comments) evaluation.comments = comments;
+
+        await evaluation.save();
+
+        res.status(200).json({
+            success: true,
+            message: 'Evaluation updated successfully',
+            data: evaluation,
+        });
+    } catch (error) {
+        next(error);
+    }
+};
