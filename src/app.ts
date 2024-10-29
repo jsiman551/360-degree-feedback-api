@@ -5,6 +5,7 @@ import errorHandler from './middlewares/errorHandler';
 import userRoutes from './routes/userRoutes';
 import employeeRoutes from './routes/employeeRoutes';
 import evaluationRoutes from './routes/evaluationRoutes';
+import feedbackRoutes from './routes/feedbackRoutes';
 
 dotenv.config();
 
@@ -17,6 +18,7 @@ app.use(express.json());
 app.use('/api/auth', userRoutes);
 app.use('/api', employeeRoutes);
 app.use('/api', evaluationRoutes);
+app.use('/api', feedbackRoutes);
 
 // Error Handler Middleware
 app.use(errorHandler);
