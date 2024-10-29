@@ -3,6 +3,10 @@ import User from '../models/user';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
+interface CustomError extends Error {
+    statusCode?: number;
+}
+
 export const registerUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
         const { username, password, role } = req.body;
@@ -20,47 +24,42 @@ export const registerUser = async (req: Request, res: Response, next: NextFuncti
             },
         });
     } catch (error: any) {
-        // if user already exist
         if (error.code === 11000) {
-            res.status(409).json({
-                success: false,
-                status: 409,
-                message: 'Name was already taken, please write a different name',
-            });
-        } else {
-            next(error);
+            // Duplicate User Error
+            const customError: CustomError = new Error('Name was already taken, please write a different name');
+            customError.statusCode = 409;
+            return next(customError);
         }
+        next(error);
     }
 };
 
-export const loginUser = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
+export const loginUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
         const { username, password } = req.body;
 
-        // Look for user in DB
+        // Find user in DB
         const user = await User.findOne({ username });
         if (!user) {
-            return res.status(401).json({
-                success: false,
-                message: 'Invalid Credentials',
-            });
+            const customError: CustomError = new Error('Invalid Credentials');
+            customError.statusCode = 401;
+            return next(customError);
         }
 
-        // Compare passwords
+        // Compare Passwords
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
-            return res.status(401).json({
-                success: false,
-                message: 'Invalid Credentials',
-            });
+            const customError: CustomError = new Error('Invalid Credentials');
+            customError.statusCode = 401;
+            return next(customError);
         }
 
         // Generate JWT
         const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET!, {
-            expiresIn: '1h', // token will expire in 1 hour
+            expiresIn: '1h', // el token expirará en 1 hora
         });
 
-        // Return token and user data
+        // Return token a user data
         res.status(200).json({
             success: true,
             message: 'Login Successful',
