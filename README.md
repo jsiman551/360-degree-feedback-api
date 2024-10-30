@@ -316,7 +316,7 @@ npm run dev
 
 ### 9. **Agregar Feedback a una Evaluación**
 - **Método:** `POST`
-- **Ruta:** `/feedback`
+- **Ruta:** `/api/feedback`
 - **Descripción:** Permite a los managers y administradores agregar feedback a una evaluación existente.
 - **Autorización:** Solo accesible para usuarios con rol **Manager** o **Admin**.
 - **Cuerpo de la Solicitud:**
