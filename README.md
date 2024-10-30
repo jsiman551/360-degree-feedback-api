@@ -130,6 +130,7 @@ npm run dev
   "user": {
     "id": "user_id",
     "username": "string",
+    "email": "string",
     "role": "Admin" | "Manager" | "Employee"
   }
 }

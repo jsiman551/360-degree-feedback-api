@@ -31,6 +31,7 @@ export const loginUserController = async (req: Request, res: Response, next: Nex
             user: {
                 id: user._id,
                 username: user.username,
+                email: user.email,
                 role: user.role,
             },
         });
