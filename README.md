@@ -173,6 +173,7 @@ npm run dev
 - **Ruta:** `/api/evaluations/:id`
 - **Descripción:** Permite a los administradores, managers y empleados obtener una evaluación específica.
 - **Autorización:**  Accesible para usuarios con rol **Admin**, **Manager**, o **Employee**.
+
 **Respuesta Exitosa (200):**
 ```json
 {
@@ -227,7 +228,7 @@ npm run dev
 **Errores Comunes:**
 1. Unauthorized: user information missing: Si no se proporciona información del usuario.
 
-### 5. **Obtener Evaluaciones por ID de Empleado**
+### 6. **Obtener Evaluaciones por ID de Empleado**
 - **Método:** `GET`
 - **Ruta:** `/api/evaluations/employee/:id`
 - **Descripción:** Permite a los administradores, managers y empleados obtener todas las evaluaciones de un empleado específico.
@@ -260,3 +261,82 @@ npm run dev
 ```
 **Errores Comunes:**
 1. Unauthorized: user information missing: Si no se proporciona información del usuario.
+
+### 7. **Obtener Todos los Empleados**
+- **Método:** `GET`
+- **Ruta:** `/api/employees`
+- **Descripción:** Permite a los administradores y managers obtener una lista de todos los empleados.
+- **Autorización:** Solo accesible para usuarios con rol **Admin** o **Manager**.
+
+**Respuesta Exitosa (200):**
+  ```json
+  {
+    "success": true,
+    "data": [
+      {
+        "id": "employee_id",
+        "username": "string",
+        "role": "string"
+      }
+    ]
+  }
+```
+**Errores Comunes:**
+1. Access denied: Si el rol del usuario no es Admin o Manager.
+
+### 8. **Generar Reporte de Empleado**
+- **Método:** `GET`
+- **Ruta:** `/api/reports/employee/:id`
+- **Descripción:** Permite a los administradores, managers y empleados generar un reporte con las evaluaciones de un empleado específico.
+- **Autorización:** Accesible para usuarios con rol **Admin**, **Manager**, o **Employee**.
+
+**Respuesta Exitosa (200):**
+  ```json
+    {
+        "success": true,
+        "data": {
+            "employeeId": "employee_id",
+            "username": "string",
+            "evaluations": [
+            {
+                "date": "date",
+                "score": number,
+                "comments": "string",
+                "evaluator": "string"
+            }
+            ],
+            "averageScore": number
+        }
+    }
+```
+**Errores Comunes:**
+1. User information missing: Si no se proporciona información del usuario.
+2. Employee not found: Si el empleado especificado no se encuentra.
+3. Access denied: Si un empleado intenta acceder al reporte de otro empleado.
+
+### 9. **Agregar Feedback a una Evaluación**
+- **Método:** `POST`
+- **Ruta:** `/feedback`
+- **Descripción:** Permite a los managers y administradores agregar feedback a una evaluación existente.
+- **Autorización:** Solo accesible para usuarios con rol **Manager** o **Admin**.
+- **Cuerpo de la Solicitud:**
+  ```json
+  {
+    "evaluationId": "string",
+    "feedbackText": "string",
+    "score": number
+  }
+    ```
+**Respuesta Exitosa (200):**
+```json
+    {
+    "success": true,
+    "message": "Feedback added successfully",
+    "data": {
+        // Detalles de la evaluación actualizada, incluyendo el feedback agregado
+    }
+    }
+```
+**Errores Comunes:**
+1. Unauthorized: user information missing: Si no se proporciona información del usuario.
+2. Evaluation not found: Si la evaluación especificada no se encuentra.
