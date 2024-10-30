@@ -11,9 +11,9 @@ interface IPopulatedEvaluation extends Omit<IEvaluation, 'evaluator'> {
 
 export const getAllEmployees = async (userRole: string): Promise<IUser[]> => {
     if (userRole === 'Admin') {
-        return await User.find({});
+        return await User.find({}).select('-password');
     } else if (userRole === 'Manager') {
-        return await User.find({ role: { $nin: ['Admin', 'Manager'] } });
+        return await User.find({ role: { $nin: ['Admin', 'Manager'] } }).select('-password');
     } else {
         throw new Error('Access denied');
     }
