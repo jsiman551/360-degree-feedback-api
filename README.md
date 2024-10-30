@@ -136,3 +136,127 @@ npm run dev
 ```
 **Errores Comunes:**
 1. Invalid Credentials: Si el nombre de usuario o la contraseña son incorrectos.
+
+### 3. **Crear Evaluación**
+- **Método:** `POST`
+- **Ruta:** `/api/evaluations`
+- **Descripción:** Permite a los administradores y managers crear una nueva evaluación para un empleado.
+- **Autorización:** Solo accesible para usuarios con rol **Manager** o **Admin**.
+- **Cuerpo de la solicitud:**
+  ```json
+  {
+    "employeeId": "string",
+    "score": number,
+    "comments": "string"
+  }
+    ```
+**Respuesta Exitosa (201):**
+```json
+{
+  "success": true,
+  "message": "Evaluation created successfully",
+  "data": {
+    "employee": "employee_id",
+    "evaluator": "evaluator_id",
+    "score": number,
+    "comments": "string",
+    "date": "date",
+    "updatedAt": "date"
+  }
+}
+```
+**Errores Comunes:**
+1. Unauthorized: user information missing: Si no se proporciona información del usuario.
+
+### 4. **Obtener Evaluación por ID**
+- **Método:** `GET`
+- **Ruta:** `/api/evaluations/:id`
+- **Descripción:** Permite a los administradores, managers y empleados obtener una evaluación específica.
+- **Autorización:**  Accesible para usuarios con rol **Admin**, **Manager**, o **Employee**.
+**Respuesta Exitosa (200):**
+```json
+{
+  "success": true,
+  "data": {
+    "employee": "employee_id",
+    "evaluator": "evaluator_id",
+    "feedbacks": [
+      {
+        "feedbackText": "string",
+        "score": number,
+        "date": "date",
+        "user": "user_id"
+      }
+    ],
+    "score": number,
+    "comments": "string",
+    "date": "date",
+    "updatedAt": "date"
+  }
+}
+```
+**Errores Comunes:**
+1. Unauthorized: user information missing: Si no se proporciona información del usuario.
+
+### 5. **Actualizar Evaluación**
+- **Método:** `PUT`
+- **Ruta:** `/api/evaluations/:id`
+- **Descripción:** Permite a los administradores y managers actualizar una evaluación existente.
+- **Autorización:** Solo accesible para usuarios con rol **Manager** o **Admin**.
+- **Cuerpo de la solicitud:**
+```json
+{
+  "score": number,
+  "comments": "string"
+}
+```
+**Respuesta Exitosa (200):**
+```json
+{
+  "success": true,
+  "data": {
+    "employee": "employee_id",
+    "evaluator": "evaluator_id",
+    "score": number,
+    "comments": "string",
+    "date": "date",
+    "updatedAt": "date"
+  }
+}
+```
+**Errores Comunes:**
+1. Unauthorized: user information missing: Si no se proporciona información del usuario.
+
+### 5. **Obtener Evaluaciones por ID de Empleado**
+- **Método:** `GET`
+- **Ruta:** `/api/evaluations/employee/:id`
+- **Descripción:** Permite a los administradores, managers y empleados obtener todas las evaluaciones de un empleado específico.
+- **Autorización:** Accesible para usuarios con rol **Admin**, **Manager**, o **Employee**.
+
+**Respuesta Exitosa (200):**
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "_id": "string",
+      "employee": [],
+      "evaluator": [],
+      "feedbacks": [
+        {
+          "feedbackText": "string",
+          "score": number,
+          "date": "date",
+          "user": "user_id"
+        }
+      ],
+      "score": number,
+      "comments": "string",
+      "date": "date",
+      "updatedAt": "date"
+    }
+  ]
+}
+```
+**Errores Comunes:**
+1. Unauthorized: user information missing: Si no se proporciona información del usuario.
