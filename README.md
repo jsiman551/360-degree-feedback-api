@@ -28,6 +28,27 @@ Este proyecto es una API para la gestión de evaluaciones de desempeño en una o
     JWT_SECRET=<clave-secreta-para-JWT>
   ```  
 
+### Descripción de las Carpetas
+
+- **dist**: Contiene los archivos JavaScript generados al compilar el código TypeScript.
+- **node_modules**: Carpeta donde se instalan las dependencias del proyecto.
+- **src**: Carpeta principal para el código fuente.
+  - **config**: Archivos de configuración, que contiene la conexion a base de datos.
+  - **controllers**: Controladores que gestionan las solicitudes y respuestas.
+  - **middlewares**: Funciones middleware que se ejecutan durante el ciclo de vida de las solicitudes.
+  - **models**: Modelos que representan la estructura de los datos en la aplicación.
+  - **routes**: Definición de las rutas de la aplicación.
+  - **schemas**: Esquemas para la validación de datos.
+  - **services**: Lógica de negocio que puede ser reutilizada en diferentes partes de la aplicación.
+  - **types**: Definición de tipos e interfaces para TypeScript.
+- **app.ts**: Archivo principal que configura la aplicación Express.
+- **server.ts**: Archivo que inicia el servidor.
+- **.env**: Archivo para las variables de entorno.
+- **.gitignore**: Archivos y carpetas que deben ser ignorados por el control de versiones.
+- **package-lock.json**: Mantiene un registro de las versiones exactas de las dependencias instaladas.
+- **package.json**: Contiene información sobre el proyecto y sus dependencias.
+- **README.md**: Documentación del proyecto.
+- **tsconfig.json**: Configuración del compilador TypeScript.
 
 ## Instalación
 
