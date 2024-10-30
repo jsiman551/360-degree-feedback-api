@@ -6,7 +6,7 @@ export interface CustomError extends Error {
     errors?: { path: string; message: string }[];
 }
 
-const errorHandler = (err: CustomError, req: Request, res: Response, next: NextFunction): void => {
+const errorHandler = (err: CustomError, _req: Request, res: Response, _next: NextFunction): void => {
     const status = err.statusCode || 500;
     const message = err.message || 'Server Error';
 
