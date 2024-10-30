@@ -76,3 +76,63 @@ Alternativamente, para desarrollo con reinicio automático, usa:
 ```bash
 npm run dev
 ```
+
+## Endpoints
+
+### 1. **Registro de Usuario**
+- **Método:** `POST`
+- **Ruta:** `/api/auth/register`
+- **Descripción:** Permite a los administradores registrar un nuevo usuario en el sistema.
+- **Autorización:** Solo accesible para usuarios con rol **Admin**.
+- **Cuerpo de la solicitud:**
+  ```json
+  {
+    "username": "string",
+    "email": "string",
+    "password": "string",
+    "role": "Admin" | "Manager" | "Employee"
+  }
+    ```
+**Respuesta Exitosa (201):**
+```json
+{
+  "success": true,
+  "message": "User was created successfully",
+  "data": {
+    "id": "user_id",
+    "username": "string",
+    "email": "string",
+    "role": "Admin" | "Manager" | "Employee"
+  }
+}
+```
+**Errores Comunes:**
+1. Email already in use: Si el correo electrónico ya está registrado.
+2. Username already in use: Si el nombre de usuario ya está en uso.
+
+### 2. **Inicio de Sesión de Usuario**
+- **Método:** `POST`
+- **Ruta:** `/api/auth/login`
+- **Descripción:** Permite a los usuarios iniciar sesión en el sistema.
+- **Cuerpo de la solicitud:**
+```json
+{
+  "username": "string",
+  "password": "string"
+}
+```
+**Respuesta Exitosa (200):**
+```json
+{
+  "success": true,
+  "message": "Login Successful",
+  "token": "jwt_token",
+  "user": {
+    "id": "user_id",
+    "username": "string",
+    "role": "Admin" | "Manager" | "Employee"
+  }
+}
+```
+**Errores Comunes:**
+1. Invalid Credentials: Si el nombre de usuario o la contraseña son incorrectos.
