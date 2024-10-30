@@ -1,4 +1,4 @@
-import express, { Application } from 'express';
+import express, { Application, Router } from 'express';
 import dotenv from 'dotenv';
 import connectDB from './config/db';
 import errorHandler from './middlewares/errorHandler';
@@ -15,10 +15,14 @@ connectDB();
 app.use(express.json());
 
 // routes
-app.use('/api/auth', userRoutes);
-app.use('/api', employeeRoutes);
-app.use('/api', evaluationRoutes);
-app.use('/api', feedbackRoutes);
+const apiRouter = Router();
+
+apiRouter.use('/auth', userRoutes);
+apiRouter.use(employeeRoutes);
+apiRouter.use(evaluationRoutes);
+apiRouter.use(feedbackRoutes);
+
+app.use('/api', apiRouter);
 
 // Error Handler Middleware
 app.use(errorHandler);
