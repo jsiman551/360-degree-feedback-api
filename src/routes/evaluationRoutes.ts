@@ -2,7 +2,7 @@ import express from 'express';
 import { createEvaluation, getEvaluationById, getEvaluationsByEmployeeId, updateEvaluation } from '../controllers/evaluationController';
 import { authorizeRoles } from '../middlewares/authMiddleware';
 import validateResource from '../middlewares/validateResource';
-import { evaluationSchema } from '../schemas/evaluationSchema';
+import { evaluationSchema, updateEvaluationSchema } from '../schemas/evaluationSchema';
 
 const router = express.Router();
 
@@ -22,7 +22,7 @@ router.get(
 router.put(
     '/evaluations/:id',
     authorizeRoles(['Manager', 'Admin']),
-    validateResource(evaluationSchema),
+    validateResource(updateEvaluationSchema),
     updateEvaluation
 );
 
