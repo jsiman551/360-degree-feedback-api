@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.addFeedbackToEvaluation = void 0;
 const mongoose_1 = __importDefault(require("mongoose"));
 const evaluation_1 = __importDefault(require("../models/evaluation"));
+const user_1 = __importDefault(require("../models/user"));
 const addFeedbackToEvaluation = (feedbackData) => __awaiter(void 0, void 0, void 0, function* () {
     const { evaluationId, feedbackText, score, userId } = feedbackData;
     // Search evaluation by id
@@ -24,14 +25,19 @@ const addFeedbackToEvaluation = (feedbackData) => __awaiter(void 0, void 0, void
         error.statusCode = 404;
         throw error;
     }
-    // add feedback to evaluation
+    const user = yield user_1.default.findById(userId).select('username');
+    if (!user) {
+        const error = new Error('User not found');
+        error.statusCode = 404;
+        throw error;
+    }
     evaluation.feedbacks.push({
         feedbackText,
         score,
         date: new Date(),
         user: new mongoose_1.default.Types.ObjectId(userId),
+        commentor: user.username,
     });
-    // save feedback
     yield evaluation.save();
     return evaluation;
 });

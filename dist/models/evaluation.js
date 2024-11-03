@@ -29,6 +29,7 @@ const feedbackSchema = new mongoose_1.Schema({
     score: { type: Number, required: true },
     date: { type: Date, default: Date.now },
     user: { type: mongoose_1.default.Schema.Types.ObjectId, ref: 'User', required: true },
+    commentor: { type: String, required: true },
 });
 const evaluationSchema = new mongoose_1.Schema({
     employee: { type: mongoose_1.default.Schema.Types.ObjectId, ref: 'User', required: true },
