@@ -8,7 +8,7 @@ const router = express.Router();
 
 router.post(
     '/feedback',
-    authorizeRoles(['Manager', 'Admin']),
+    authorizeRoles(['Admin', 'Manager', 'Employee']),
     validateResource(feedbackSchema),
     addFeedbackToEvaluation
 );

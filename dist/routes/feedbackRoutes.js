@@ -9,5 +9,5 @@ const validateResource_1 = __importDefault(require("../middlewares/validateResou
 const feedbackSchema_1 = require("../schemas/feedbackSchema");
 const authMiddleware_1 = require("../middlewares/authMiddleware");
 const router = express_1.default.Router();
-router.post('/feedback', (0, authMiddleware_1.authorizeRoles)(['Manager', 'Admin']), (0, validateResource_1.default)(feedbackSchema_1.feedbackSchema), feedbackController_1.addFeedbackToEvaluation);
+router.post('/feedback', (0, authMiddleware_1.authorizeRoles)(['Admin', 'Manager', 'Employee']), (0, validateResource_1.default)(feedbackSchema_1.feedbackSchema), feedbackController_1.addFeedbackToEvaluation);
 exports.default = router;
