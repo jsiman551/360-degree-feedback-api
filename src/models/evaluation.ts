@@ -4,7 +4,8 @@ interface IFeedback {
     feedbackText: string;
     score: number;
     date: Date;
-    user: mongoose.Types.ObjectId; // Campo para registrar el usuario que envió el feedback
+    user: mongoose.Types.ObjectId;
+    commentor: string;
 }
 
 export interface IEvaluation extends Document {
@@ -22,6 +23,7 @@ const feedbackSchema = new Schema<IFeedback>({
     score: { type: Number, required: true },
     date: { type: Date, default: Date.now },
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    commentor: { type: String, required: true },
 });
 
 const evaluationSchema = new Schema<IEvaluation>({

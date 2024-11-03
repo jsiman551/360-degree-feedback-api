@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import Evaluation from '../models/evaluation';
+import User from '../models/user';
 import { CustomError } from '../middlewares/errorHandler';
 
 interface FeedbackData {
@@ -20,15 +21,21 @@ export const addFeedbackToEvaluation = async (feedbackData: FeedbackData) => {
         throw error;
     }
 
-    // add feedback to evaluation
+    const user = await User.findById(userId).select('username');
+    if (!user) {
+        const error: CustomError = new Error('User not found');
+        error.statusCode = 404;
+        throw error;
+    }
+
     evaluation.feedbacks.push({
         feedbackText,
         score,
         date: new Date(),
         user: new mongoose.Types.ObjectId(userId),
+        commentor: user.username,
     });
 
-    // save feedback
     await evaluation.save();
 
     return evaluation;
