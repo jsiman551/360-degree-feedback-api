@@ -15,6 +15,7 @@ Este proyecto es una API para la gestión de evaluaciones de desempeño en una o
 - **Mongoose** para la gestión de datos.
 - **TypeScript** como lenguaje principal.
 - **Zod** para la validación de datos.
+- **Vitest** para pruebas unitarias.
 
 ## Requisitos
 
@@ -341,3 +342,8 @@ npm run dev
 **Errores Comunes:**
 1. Unauthorized: user information missing: Si no se proporciona información del usuario.
 2. Evaluation not found: Si la evaluación especificada no se encuentra.
+
+## Correr Tests
+```bash
+npm run test
+```
