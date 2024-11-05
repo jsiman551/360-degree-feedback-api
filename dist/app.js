@@ -22,6 +22,15 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -35,18 +44,27 @@ const userRoutes_1 = __importDefault(require("./routes/userRoutes"));
 const employeeRoutes_1 = __importDefault(require("./routes/employeeRoutes"));
 const evaluationRoutes_1 = __importDefault(require("./routes/evaluationRoutes"));
 const feedbackRoutes_1 = __importDefault(require("./routes/feedbackRoutes"));
+const seedAdmin_1 = __importDefault(require("./seeds/seedAdmin"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
-(0, db_1.default)();
-app.use((0, cors_1.default)({ origin: '*' }));
-app.use(express_1.default.json());
-// routes
-const apiRouter = (0, express_1.Router)();
-apiRouter.use('/auth', userRoutes_1.default);
-apiRouter.use(employeeRoutes_1.default);
-apiRouter.use(evaluationRoutes_1.default);
-apiRouter.use(feedbackRoutes_1.default);
-app.use('/api', apiRouter);
-// Error Handler Middleware
-app.use(errorHandler_1.default);
+const initializeApp = () => __awaiter(void 0, void 0, void 0, function* () {
+    //set database
+    yield (0, db_1.default)();
+    yield (0, seedAdmin_1.default)();
+    app.use((0, cors_1.default)({ origin: '*' }));
+    app.use(express_1.default.json());
+    //set routes
+    const apiRouter = (0, express_1.Router)();
+    apiRouter.use('/auth', userRoutes_1.default);
+    apiRouter.use(employeeRoutes_1.default);
+    apiRouter.use(evaluationRoutes_1.default);
+    apiRouter.use(feedbackRoutes_1.default);
+    app.use('/api', apiRouter);
+    // error handler
+    app.use(errorHandler_1.default);
+});
+initializeApp().catch((error) => {
+    console.error('Error initializing app:', error);
+    process.exit(1);
+});
 exports.default = app;

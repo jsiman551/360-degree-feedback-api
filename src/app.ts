@@ -7,26 +7,37 @@ import userRoutes from './routes/userRoutes';
 import employeeRoutes from './routes/employeeRoutes';
 import evaluationRoutes from './routes/evaluationRoutes';
 import feedbackRoutes from './routes/feedbackRoutes';
+import seedAdmin from './seeds/seedAdmin';
 
 dotenv.config();
 
 const app: Application = express();
-connectDB();
 
-app.use(cors({ origin: '*' }));
-app.use(express.json());
+const initializeApp = async () => {
+    //set database
+    await connectDB();
+    await seedAdmin();
 
-// routes
-const apiRouter = Router();
+    app.use(cors({ origin: '*' }));
+    app.use(express.json());
 
-apiRouter.use('/auth', userRoutes);
-apiRouter.use(employeeRoutes);
-apiRouter.use(evaluationRoutes);
-apiRouter.use(feedbackRoutes);
+    //set routes
+    const apiRouter = Router();
 
-app.use('/api', apiRouter);
+    apiRouter.use('/auth', userRoutes);
+    apiRouter.use(employeeRoutes);
+    apiRouter.use(evaluationRoutes);
+    apiRouter.use(feedbackRoutes);
 
-// Error Handler Middleware
-app.use(errorHandler);
+    app.use('/api', apiRouter);
+
+    // error handler
+    app.use(errorHandler);
+};
+
+initializeApp().catch((error) => {
+    console.error('Error initializing app:', error);
+    process.exit(1);
+});
 
 export default app;
