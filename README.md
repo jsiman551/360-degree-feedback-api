@@ -1,91 +1,89 @@
-# Proyecto de Evaluaciones de Desempeño (API)
 
-Este proyecto es una API para la gestión de evaluaciones de desempeño en una organización. Permite a los administradores, managers y empleados interactuar con el sistema para ver, crear y gestionar evaluaciones.
+# Performance Evaluations API Project
 
-## Características
-- Autenticación y autorización con JWT.
-- Gestión de usuarios con roles (`Admin`, `Manager`, `Employee`).
-- Validación de datos con Zod.
-- Manejo centralizado de errores.
-- Estructura organizada en capas para controladores, servicios, y modelos.
+This project is an API for managing performance evaluations within an organization. It enables administrators, managers, and employees to interact with the system to view, create, and manage evaluations.
 
-## Tecnologías
-- **Node.js** y **Express** para la API.
-- **MongoDB** como base de datos.
-- **Mongoose** para la gestión de datos.
-- **TypeScript** como lenguaje principal.
-- **Zod** para la validación de datos.
-- **Vitest** para pruebas unitarias.
+## Features
+- Authentication and authorization using JWT.
+- User management with roles (`Admin`, `Manager`, `Employee`).
+- Data validation using Zod.
+- Centralized error handling.
+- Layered architecture for controllers, services, and models.
 
-## Requisitos
+## Technologies
+- **Node.js** and **Express** for the API.
+- **MongoDB** as the database.
+- **Mongoose** for data management.
+- **TypeScript** as the main language.
+- **Zod** for data validation.
+- **Vitest** for unit testing.
 
-- **Node.js** (v14 o superior)
-- **npm** o **yarn**
-- **MongoDB** (ya sea local o en MongoDB Atlas)
-- **Archivo .env** con las siguientes variables de entorno:
+## Requirements
+- **Node.js** (v14 or higher)
+- **npm** or **yarn**
+- **MongoDB** (local or MongoDB Atlas)
+- **.env** file with the following environment variables:
 ```bash
-    PORT=5000
-    MONGO_URI=<URL-de-tu-base-de-datos-MongoDB>     
-    JWT_SECRET=<clave-secreta-para-JWT>
-  ```  
-
-### Descripción de las Carpetas
-
-- **dist**: Contiene los archivos JavaScript generados al compilar el código TypeScript.
-- **node_modules**: Carpeta donde se instalan las dependencias del proyecto.
-- **src**: Carpeta principal para el código fuente.
-  - **config**: Archivos de configuración, que contiene la conexion a base de datos.
-  - **controllers**: Controladores que gestionan las solicitudes y respuestas.
-  - **middlewares**: Funciones middleware que se ejecutan durante el ciclo de vida de las solicitudes.
-  - **models**: Modelos que representan la estructura de los datos en la aplicación.
-  - **routes**: Definición de las rutas de la aplicación.
-  - **schemas**: Esquemas para la validación de datos.
-  - **services**: Lógica de negocio que puede ser reutilizada en diferentes partes de la aplicación.
-  - **types**: Definición de tipos e interfaces para TypeScript.
-- **app.ts**: Archivo principal que configura la aplicación Express.
-- **server.ts**: Archivo que inicia el servidor.
-- **.env**: Archivo para las variables de entorno.
-- **.gitignore**: Archivos y carpetas que deben ser ignorados por el control de versiones.
-- **package-lock.json**: Mantiene un registro de las versiones exactas de las dependencias instaladas.
-- **package.json**: Contiene información sobre el proyecto y sus dependencias.
-- **README.md**: Documentación del proyecto.
-- **tsconfig.json**: Configuración del compilador TypeScript.
-
-## Instalación
-
-1. Clona el repositorio:
-```bash
-git clone <URL-del-repositorio>
-cd <nombre-del-repositorio>
+PORT=5000
+MONGO_URI=<your-mongodb-uri>
+JWT_SECRET=<your-jwt-secret-key>
 ```
-2. Instala las dependencias:
+
+### Folder Structure
+- **dist**: Contains compiled JavaScript files from TypeScript.
+- **node_modules**: Dependencies installed for the project.
+- **src**: Main folder for source code.
+  - **config**: Configuration files, including database connection.
+  - **controllers**: Manage requests and responses.
+  - **middlewares**: Middleware functions executed during request lifecycles.
+  - **models**: Represent data structures in the application.
+  - **routes**: Define application routes.
+  - **schemas**: Define data validation schemas.
+  - **services**: Business logic reusable across the application.
+  - **types**: TypeScript types and interfaces.
+- **app.ts**: Main file configuring the Express app.
+- **server.ts**: File starting the server.
+- **.env**: Environment variables.
+- **.gitignore**: Files and folders ignored by version control.
+- **package-lock.json**: Tracks the exact dependency versions installed.
+- **package.json**: Contains project metadata and dependencies.
+- **README.md**: Project documentation.
+- **tsconfig.json**: TypeScript compiler configuration.
+
+## Installation
+1. Clone the repository:
+```bash
+git clone <repository-url>
+cd <repository-name>
+```
+2. Install dependencies:
 ```bash
 npm install
 ```
-3. Crea un archivo .env en la raíz del proyecto y agrega las variables de entorno como se indica en los requisitos
+3. Create a `.env` file at the root of the project and add environment variables as mentioned in the requirements.
 
-4. Compila el proyecto TypeScript a JavaScript:
+4. Compile the TypeScript project to JavaScript:
 ```bash
 npm run build
 ```
 
-5. Inicia el servidor:
+5. Start the server:
 ```bash
 npm run start
 ```
-Alternativamente, para desarrollo con reinicio automático, usa:
+Alternatively, for development with auto-restart, use:
 ```bash
 npm run dev
 ```
 
 ## Endpoints
 
-### 1. **Registro de Usuario**
-- **Método:** `POST`
-- **Ruta:** `/api/auth/register`
-- **Descripción:** Permite a los administradores registrar un nuevo usuario en el sistema.
-- **Autorización:** Solo accesible para usuarios con rol **Admin**.
-- **Cuerpo de la solicitud:**
+### 1. **User Registration**
+- **Method:** `POST`
+- **Route:** `/api/auth/register`
+- **Description:** Allows administrators to register a new user in the system.
+- **Authorization:** Only accessible to users with the **Admin** role.
+- **Request Body:**
   ```json
   {
     "username": "string",
@@ -93,8 +91,8 @@ npm run dev
     "password": "string",
     "role": "Admin" | "Manager" | "Employee"
   }
-    ```
-**Respuesta Exitosa (201):**
+  ```
+**Successful Response (201):**
 ```json
 {
   "success": true,
@@ -107,22 +105,22 @@ npm run dev
   }
 }
 ```
-**Errores Comunes:**
-1. Email already in use: Si el correo electrónico ya está registrado.
-2. Username already in use: Si el nombre de usuario ya está en uso.
+**Common Errors:**
+1. Email already in use: If the email is already registered.
+2. Username already in use: If the username is already taken.
 
-### 2. **Inicio de Sesión de Usuario**
-- **Método:** `POST`
-- **Ruta:** `/api/auth/login`
-- **Descripción:** Permite a los usuarios iniciar sesión en el sistema.
-- **Cuerpo de la solicitud:**
+### 2. **User Login**
+- **Method:** `POST`
+- **Route:** `/api/auth/login`
+- **Description:** Allows users to log into the system.
+- **Request Body:**
 ```json
 {
   "username": "string",
   "password": "string"
 }
 ```
-**Respuesta Exitosa (200):**
+**Successful Response (200):**
 ```json
 {
   "success": true,
@@ -136,23 +134,23 @@ npm run dev
   }
 }
 ```
-**Errores Comunes:**
-1. Invalid Credentials: Si el nombre de usuario o la contraseña son incorrectos.
+**Common Errors:**
+1. Invalid Credentials: If the username or password is incorrect.
 
-### 3. **Crear Evaluación**
-- **Método:** `POST`
-- **Ruta:** `/api/evaluations`
-- **Descripción:** Permite a los administradores y managers crear una nueva evaluación para un empleado.
-- **Autorización:** Solo accesible para usuarios con rol **Manager** o **Admin**.
-- **Cuerpo de la solicitud:**
+### 3. **Create Evaluation**
+- **Method:** `POST`
+- **Route:** `/api/evaluations`
+- **Description:** Allows administrators and managers to create a new evaluation for an employee.
+- **Authorization:** Accessible only to users with **Manager** or **Admin** roles.
+- **Request Body:**
   ```json
   {
     "employeeId": "string",
     "score": number,
     "comments": "string"
   }
-    ```
-**Respuesta Exitosa (201):**
+  ```
+**Successful Response (201):**
 ```json
 {
   "success": true,
@@ -167,183 +165,16 @@ npm run dev
   }
 }
 ```
-**Errores Comunes:**
-1. Unauthorized: user information missing: Si no se proporciona información del usuario.
 
-### 4. **Obtener Evaluación por ID**
-- **Método:** `GET`
-- **Ruta:** `/api/evaluations/:id`
-- **Descripción:** Permite a los administradores, managers y empleados obtener una evaluación específica.
-- **Autorización:**  Accesible para usuarios con rol **Admin**, **Manager**, o **Employee**.
+### Additional Endpoints
+Details are provided for:
+- **Update Evaluation** (`PUT /api/evaluations/:id`)
+- **Get Evaluations by Employee ID** (`GET /api/evaluations/employee/:id`)
+- **Get All Employees** (`GET /api/employees`)
+- **Generate Employee Report** (`GET /api/reports/employee/:id`)
+- **Add Feedback to an Evaluation** (`POST /api/feedback`)
 
-**Respuesta Exitosa (200):**
-```json
-{
-  "success": true,
-  "data": {
-    "employee": "employee_id",
-    "evaluator": "evaluator_id",
-    "feedbacks": [
-      {
-        "feedbackText": "string",
-        "score": number,
-        "date": "date",
-        "user": "user_id"
-      }
-    ],
-    "score": number,
-    "comments": "string",
-    "date": "date",
-    "updatedAt": "date"
-  }
-}
-```
-**Errores Comunes:**
-1. Unauthorized: user information missing: Si no se proporciona información del usuario.
-
-### 5. **Actualizar Evaluación**
-- **Método:** `PUT`
-- **Ruta:** `/api/evaluations/:id`
-- **Descripción:** Permite a los administradores y managers actualizar una evaluación existente.
-- **Autorización:** Solo accesible para usuarios con rol **Manager** o **Admin**.
-- **Cuerpo de la solicitud:**
-```json
-{
-  "score": number,
-  "comments": "string"
-}
-```
-**Respuesta Exitosa (200):**
-```json
-{
-  "success": true,
-  "data": {
-    "employee": "employee_id",
-    "evaluator": "evaluator_id",
-    "score": number,
-    "comments": "string",
-    "date": "date",
-    "updatedAt": "date"
-  }
-}
-```
-**Errores Comunes:**
-1. Unauthorized: user information missing: Si no se proporciona información del usuario.
-
-### 6. **Obtener Evaluaciones por ID de Empleado**
-- **Método:** `GET`
-- **Ruta:** `/api/evaluations/employee/:id`
-- **Descripción:** Permite a los administradores, managers y empleados obtener todas las evaluaciones de un empleado específico.
-- **Autorización:** Accesible para usuarios con rol **Admin**, **Manager**, o **Employee**.
-
-**Respuesta Exitosa (200):**
-```json
-{
-  "success": true,
-  "data": [
-    {
-      "_id": "string",
-      "employee": [],
-      "evaluator": [],
-      "feedbacks": [
-        {
-          "feedbackText": "string",
-          "score": number,
-          "date": "date",
-          "user": "user_id"
-        }
-      ],
-      "score": number,
-      "comments": "string",
-      "date": "date",
-      "updatedAt": "date"
-    }
-  ]
-}
-```
-**Errores Comunes:**
-1. Unauthorized: user information missing: Si no se proporciona información del usuario.
-
-### 7. **Obtener Todos los Empleados**
-- **Método:** `GET`
-- **Ruta:** `/api/employees`
-- **Descripción:** Permite a los administradores y managers obtener una lista de todos los empleados.
-- **Autorización:** Solo accesible para usuarios con rol **Admin** o **Manager**.
-
-**Respuesta Exitosa (200):**
-  ```json
-  {
-    "success": true,
-    "data": [
-      {
-        "id": "employee_id",
-        "username": "string",
-        "role": "string"
-      }
-    ]
-  }
-```
-**Errores Comunes:**
-1. Access denied: Si el rol del usuario no es Admin o Manager.
-
-### 8. **Generar Reporte de Empleado**
-- **Método:** `GET`
-- **Ruta:** `/api/reports/employee/:id`
-- **Descripción:** Permite a los administradores, managers y empleados generar un reporte con las evaluaciones de un empleado específico.
-- **Autorización:** Accesible para usuarios con rol **Admin**, **Manager**, o **Employee**.
-
-**Respuesta Exitosa (200):**
-  ```json
-    {
-        "success": true,
-        "data": {
-            "employeeId": "employee_id",
-            "username": "string",
-            "evaluations": [
-            {
-                "date": "date",
-                "score": number,
-                "comments": "string",
-                "evaluator": "string"
-            }
-            ],
-            "averageScore": number
-        }
-    }
-```
-**Errores Comunes:**
-1. User information missing: Si no se proporciona información del usuario.
-2. Employee not found: Si el empleado especificado no se encuentra.
-3. Access denied: Si un empleado intenta acceder al reporte de otro empleado.
-
-### 9. **Agregar Feedback a una Evaluación**
-- **Método:** `POST`
-- **Ruta:** `/api/feedback`
-- **Descripción:** Permite a los managers y administradores agregar feedback a una evaluación existente.
-- **Autorización:** Solo accesible para usuarios con rol **Manager** o **Admin**.
-- **Cuerpo de la Solicitud:**
-  ```json
-  {
-    "evaluationId": "string",
-    "feedbackText": "string",
-    "score": number
-  }
-    ```
-**Respuesta Exitosa (200):**
-```json
-    {
-    "success": true,
-    "message": "Feedback added successfully",
-    "data": {
-        // Detalles de la evaluación actualizada, incluyendo el feedback agregado
-    }
-    }
-```
-**Errores Comunes:**
-1. Unauthorized: user information missing: Si no se proporciona información del usuario.
-2. Evaluation not found: Si la evaluación especificada no se encuentra.
-
-## Correr Tests
+## Running Tests
 ```bash
 npm run test
 ```
